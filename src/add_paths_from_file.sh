@@ -13,19 +13,22 @@
 
 if [ $# -ne 1 ]; then
     echo "Error: Please provide the input file containing paths."
-    exit 1
+    return 1
 fi
 
-input_file="$1"
+_input_file="$1"
 
-if [ ! -f "$input_file" ]; then
-    echo "Error: Input file '$input_file' does not exist."
-    exit 1
+if [ ! -f "$_input_file" ]; then
+    echo "Error: Input file '$_input_file' does not exist."
+    return 1
 fi
 
 # Combine all the paths into one
 # Replace newline with colon and remove leading colons
-new_paths="$(cat "$input_file" | tr '\n' ':' | sed -e 's|:\+$||g')"
+_new_paths="$(cat "$_input_file" | tr '\n' ':' | sed -e 's|:\+$||g')"
 
 # Add the intermediate paths to the existing PATH
-export PATH="$new_paths:$PATH"
+export PATH="$_new_paths:$PATH"
+
+unset _input_file
+unset _new_paths

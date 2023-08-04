@@ -5,8 +5,7 @@
 _bookmark_dir="$HOME/.bookmarks"
 
 mkdir -p "$_bookmark_dir"
-_prefix="bm__"
-_target_file='$_bookmark_dir/${_prefix}$1'
+_bookmark_target_file='$_bookmark_dir/bm__$1'
 
 
 # Adds bookmark to the bookmark dir with arg1 as its name.
@@ -16,8 +15,9 @@ bookmark_add() {
         echo "Error: expects exactly 1 input argument!"
         return 1
     fi
+
     # Add a new bookmark
-    local target_file=$(eval echo "$_target_file")
+    local target_file=$(eval echo "$_bookmark_target_file")
     pwd > "$target_file"
 }
 
@@ -30,7 +30,7 @@ bookmark_cd() {
         return 1
     fi
 
-    local target_file=$(eval echo "$_target_file")
+    local target_file=$(eval echo "$_bookmark_target_file")
     if [ ! -f "$target_file" ]; then
         echo "Error: No such bookmark!"
         return 1
@@ -50,7 +50,7 @@ bookmark_search() {
 
     local pattern="$1"
     grep -r "$pattern" "$_bookmark_dir" | \
-        sed -e "s|^.*/$_prefix||g" -e "s|:| |g" | \
+        sed -e "s|^.*/bm__||g" -e "s|:| |g" | \
         column -t | \
         grep "$pattern" --color=always
 }
